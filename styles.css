@@ -9,7 +9,8 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+   background: url('galleon.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: #333;
 }
 
