@@ -33,12 +33,18 @@ nav a:hover {
   color: #fff;
 }
 
-/* Galleon image */
+/* Image container */
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 .galleon-image {
-  width: 100%; /* Full width */
+  max-width: 80%; /* Set maximum width */
   height: auto; /* Maintain aspect ratio */
   display: block; /* Ensures it behaves as a block-level element */
-  margin-top: 20px; /* Adds space above the image */
   margin-bottom: 20px; /* Adds space below the image */
 }
 
