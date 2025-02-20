@@ -21,8 +21,7 @@
     <h2>PowerShell Script to get size of every directory under a $startdirectory </h2>
     <pre class="code-snippet">
       <code>
-        # taken from https://sqlnuggets.com/using-powershell-to-list-folders-and-sizes/
-        #gets the size ofevery directory under the $startDirectory directory
+#gets the size ofevery directory under the $startDirectory directory
 #can sometimes be alittle slow if a directory has a lot of folders in it
 $startDirectory = 'E:\MSSQL\Backups\'
 #gets a list offolders under the $startDirectory directory
@@ -33,6 +32,8 @@ foreach ($i in$directoryItems)
 $subFolderItems = Get-ChildItem$i.FullName -recurse -force | Where-Object{$_.PSIsContainer -eq $false} |Measure-Object -property Length -sum |Select-Object Sum
 $i.FullName+ " -- " + "{0:N2}" -f ($subFolderItems.sum / 1GB) + "GB"
 }
+
+#taken from https://sqlnuggets.com/using-powershell-to-list-folders-and-sizes/
       </code>
     </pre>
   </section>
