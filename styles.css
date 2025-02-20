@@ -7,11 +7,13 @@
 
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-   background: url('galleon.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #333;
+  background: url('galleon.jpg') no-repeat center center fixed;
+  background-size: cover; /* Ensures the image covers the full page */
+  background-attachment: fixed; /* Keeps the image in place when scrolling */
+  background-position: center center; /* Centers the background image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  margin: 0;
+  padding: 0;
 }
 
 header {
