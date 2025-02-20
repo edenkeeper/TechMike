@@ -8,21 +8,31 @@
 
 <main>
   <section>
-    <h2>PowerShell Script Example 1</h2>
+    <h2>PowerShell Script to get folder list</h2>
     <pre class="code-snippet">
       <code>
-        # This is a PowerShell script example
-        Get-Process
+        # Script recursively gets folder lists
+        Get-ChildItem$Path -Name -attributes D -Recurse > c:\temp\XXX.csv
       </code>
     </pre>
   </section>
 
   <section>
-    <h2>PowerShell Script Example 2</h2>
+    <h2>PowerShell Script to get size of every directory under a $startdirectory </h2>
     <pre class="code-snippet">
       <code>
-        # Another script example
-        Get-Service
+        # taken from https://sqlnuggets.com/using-powershell-to-list-folders-and-sizes/
+        #gets the size ofevery directory under the $startDirectory directory
+#can sometimes be alittle slow if a directory has a lot of folders in it
+$startDirectory = 'E:\MSSQL\Backups\'
+#gets a list offolders under the $startDirectory directory
+$directoryItems =Get-ChildItem $startDirectory | Where-Object {$_.PSIsContainer-eq $true} | Sort-Object
+#loops throught helist, calculating the size of each directory
+foreach ($i in$directoryItems)
+{
+$subFolderItems = Get-ChildItem$i.FullName -recurse -force | Where-Object{$_.PSIsContainer -eq $false} |Measure-Object -property Length -sum |Select-Object Sum
+$i.FullName+ " -- " + "{0:N2}" -f ($subFolderItems.sum / 1GB) + "GB"
+}
       </code>
     </pre>
   </section>
