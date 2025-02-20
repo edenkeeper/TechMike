@@ -1,78 +1,66 @@
-/* Basic Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Global Styles */
+/* Global styles */
 body {
-  background: url('galleon.jpg') no-repeat center center fixed;
-  background-size: cover; /* Ensures the image covers the full page */
-  background-attachment: fixed; /* Keeps the image in place when scrolling */
-  background-position: center center; /* Centers the background image */
-  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-color: #121212;
+  color: #f5f5f5;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
+  line-height: 1.6;
 }
 
+/* Header */
 header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
+  background-color: #1f1f1f;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 2px solid #444;
 }
 
-header nav ul {
-    list-style: none;
-    text-align: center;
+header h1 {
+  color: #e6e6e6;
+  font-size: 2.5em;
+  letter-spacing: 2px;
+  margin: 0;
 }
 
-header nav ul li {
-    display: inline;
-    margin-right: 20px;
+/* Links */
+a {
+  color: #ff5733;
+  text-decoration: none;
 }
 
-header nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.2rem;
+a:hover {
+  color: #fff;
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
+/* Main content */
+main {
+  padding: 20px;
 }
 
 section {
-    padding: 2rem;
-    margin: 2rem 0;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 20px;
 }
 
+section h2 {
+  font-size: 1.8em;
+  color: #ff5733;
+  margin-bottom: 10px;
+}
+
+/* Footer */
 footer {
-    text-align: center;
-    padding: 1rem 0;
-    background: #333;
-    color: #fff;
+  background-color: #1f1f1f;
+  padding: 10px;
+  text-align: center;
+  border-top: 2px solid #444;
 }
 
-/* Home Section */
-#home {
-    background: #ffcc00;
-    color: #fff;
-    text-align: center;
-}
-
-/* About Section */
-#about {
-    background: #fff;
-    color: #333;
-}
-
-/* Projects Section */
-#projects {
-    background: #eeeeee;
-}
-
-/* Contact Section */
-#contact {
-    background: #ffffff;
+footer p {
+  color: #bbb;
+  font-size: 0.9em;
+  margin: 0;
 }
