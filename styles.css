@@ -3,7 +3,7 @@ body {
   background-color: #121212;
   background-image: url('galleon.jpg'); /* Replace with your image URL */
   background-size: contain;
-  background-repeat:no-repeat; /* Prevents the image from repeating */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
   background-position: center center;
   color: #f5f5f5;
   font-family: 'Arial', sans-serif;
