@@ -16,9 +16,44 @@
     </div>
 
     <div class="kb-entry">
-      <h3>Fix for Issue 2: ABC</h3>
+      <h3>Breaking back into your database</h3>
       <div class="editable-box" contenteditable="true">
-        <p>This is where the fix for Issue 2 would go. You can edit this text.</p>
+        <p>Breaking Back into your database!
+ 
+This will involve some interruption, we have to put the database into a single user mode, which requires stopping and starting the database with a specific parameter. Through whichever method you find most suitable, stop any services/programs relying on your database and then stop your database. For example via an elevated command prompt, type in:
+NET STOP <INSTANCENAME>
+Then to start the instance in single user mode, run the following command via an elevated command prompt:
+NET START <INSTANCENAME> -m "SQLCMD"
+Why did we append “SQLCMD” to the end of this command? By placing “SQLCMD” into our command, we’re restricting who can use the single user mode to just connections identified as the SQLCMD tool. Alternatives if you wished to use SQL Server Management Studio would be “Microsoft SQL Server Management Studio – Query”. This is done to prevent another application taking the single user session and blocking us from performing our recovery works.
+Once this is done you won’t notice anything has changed, you’ll be prompted to input your new command as usual. At this point, run the following command:
+SQLCMD -S <Computername>\<InstanceName>
+Alternatively you can run the following command if you’re connected locally on the server:
+SQLCMD -S .\<InstanceName>
+You’ll then see a screen similar to the below:
+ 
+Now we can create our new user(s) as necessary, you may choose to use domain membership here instead of user accounts. Be mindful if you create SQL authentication based accounts, if you haven’t got Mixed Authentication Mode enabled, these won’t allow you to sign in at the end of this process.
+So lets get started creating our user accounts, in this example I’ll be using Windows Authentication but it’s extremely similar for SQL accounts.
+Firstly, we need to create a “login” for the database, a login is a security entity at a server level as opposed to a “user” which is at a database level. To create our Windows authentication based “login”, we run the following command:
+CREATE LOGIN [<DOMAIN>\<USER or GROUP name>] FROM WINDOWS;
+ 
+If you then wished to deploy a “user” you would then follow up with the following command:
+USE <Name of Database>
+GO
+CREATE USER [<DOMAIN>\<USER or GROUP name>] FROM LOGIN [<DOMAIN>\<USER or GROUP name>]
+GO
+In this instance however, I’m just interested in gaining sysadmin rights back to the database, so I’ll just run the following command next:
+ALTER SERVER ROLE sysadmin ADD MEMBER [<DOMAIN>\<USER or GROUP name>]
+GO
+Alternatively, again if I wished to apply granular controls to a particular database, you could run:
+ALTER ROLE <ROLE NAME> ADD MEMBER [<DOMAIN>\<USER or GROUP name>]
+GO
+Finally, when you’re done, just run EXIT.
+ 
+Now we just stop and start the service as normal, and we’re back in as sysadmin!
+NET STOP <INSTANCENAME>
+NET START <INSTANCENAME>
+Hopefully this helps get someone back into their database speedily!
+</p>
       </div>
     </div>
   </section>
