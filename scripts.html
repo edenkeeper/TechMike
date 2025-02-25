@@ -37,4 +37,35 @@ $i.FullName+ " -- " + "{0:N2}" -f ($subFolderItems.sum / 1GB) + "GB"
       </code>
     </pre>
   </section>
+
+ <section>
+    <h2>Robocopy Script to Copy everything from source to destination, with switches. </h2>
+    <pre class="code-snippet">
+      <code>
+      
+  robocopy "SOURCE" "DESTINATION" /FP /MT:8 /TEE /S /Z /E /COPY:DAT /NP /R:2 /W:2 /A-:SH /LOG+:"DESTINATION\XYZ_robo.txt"
+  Pause
+
+
+****************************
+        /FP	include Full Pathname of files in the output.	Outputs the actual full path to each file copied.
+        /MT	The multi-threaded parameter helps speed up your file transfers by increasing the number of CPU threads used to transfer files.
+        /TEE	output to console window, as well as the log file.	When you use /LOG, the output isn’t returned to the console; 
+               it is only displayed in the resultant log file. Use /TEE to create a log file AND display the results in the console.
+        /S	copy Subdirectories, but not empty ones.	Robocopy does not copy subdirectories by default.
+        /Z	copy files in restartable mode.	Allows Robocopy to pick back up where it left off if an error or connection drop is encountered.
+        /E	copy subdirectories, including Empty ones.	Same as /S, but it also copies empty subdirectories. Automatically adds /S into the command.
+        /COPY:copyflag[s]	what to COPY for files (default is /COPY:DAT). (copyflags :D=Data, A=Attributes, T=Timestamps). (S=Security=NTFS ACLs, O=Owner info, U=aUditing info).
+                          These are the flags to determine what you want to copy. Default is /COPY:DAT.
+        /NP	No Progress - don’t display percentage copied.	Robocopy displays the progress of a file copy in percentage format. /NP disables that progress from being displayed.
+        /R:n	number of Retries on failed copies: default 1 million.	Number of times that Robocopy retries a failed copy. Not sure why the default is set to 1 million, which seems excessive.
+        /W:n	Wait time between retries: default is 30 seconds.	The amount of time Robocopy waits before attempting a retry.
+        /A-:[RASHCNET]	Remove the given Attributes from copied files.	Remove Read only, Archive, System, Hidden, Compressed, Not content indexed, Encrypted, Temporary, Offline.
+        /LOG+:file	output status to LOG file (append to existing log).	Instead of overwriting the preview log, the output is added to an already existing log.
+
+        
+    </code>
+    </pre>
+  </section>
+        
 </main>
