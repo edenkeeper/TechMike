@@ -8,6 +8,23 @@
 
 <main>
   <section>
+    <h2>PowerShell Script to stop screensaver</h2>
+    <pre class="code-snippet">
+      <code>
+        # Script sends the F13 key as input to keep conenciton alive
+       param($minutes = 9999)
+
+$myShell = New-Object -com "Wscript.Shell"
+
+for ($i = 0; $i -lt $minutes; $i++) {
+Start-Sleep -Seconds 30
+$myShell.sendkeys("{F13}")
+}
+      </code>
+    </pre>
+  </section>
+  
+  <section>
     <h2>PowerShell Script to get folder list</h2>
     <pre class="code-snippet">
       <code>
