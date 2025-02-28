@@ -23,5 +23,18 @@
 
       </div>
     </div>
+
+     <div class="kb-entry">
+      <h3>Chrome on Ubuntu 20.04 not starting due to apparmor</h3>
+      <div class="editable-box" contenteditable="true">
+ <p> FROM https://github.com/chainguard-dev/melange/issues/1508 </p>
+<p> FROM https://stackoverflow.com/questions/76165512/fatalcredentials-cc127-check-failed-permission-denied-13-trace-breakpo </p>
+
+ <p>Run the below command to allow the app through the apparmor :
+   sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0</p>
+        
+      </div>
+    </div>
+    
   </section>
 </main>
