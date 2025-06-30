@@ -36,125 +36,95 @@
 
          <div class="kb-entry">
       <h3>Rewriting the BCD on EFI volumes</h3>
-      <div class="editable-box" contenteditable="true">
+      <div class="editable-box" contenteditable="false">
  <p> FROM https://docs.retrospect.com/docs/repairing-efigpt-bootloader-using-the-diskpart-and-bcdedit-command </p>
 <p>Repairing EFI/GPT Bootloader using the DISKPART and BCDEdit command
 This guide helps repair bootloader issues, for example getting a blue screen of death with the following error:
 
 The boot configuration data for your PC is missing or contains errors.
-
 c.f. http://woshub.com/how-to-repair-uefi-bootloader-in-windows-8/ for more background information.
-
 Use diskpart to make System partition available.
 (This will allow us to use bcdedit later in this guide to repair the bootloader.)
-
 Boot from the Windows installation media
-
 When at the Install Windows screen hit Shift+F10 to bring up a command prompt.
 
-Type diskpart, then type list disk:
+  Type diskpart, then type list disk:
 
-DISKPART> list disk
-
-Disk #### Status Size Free Dyn Gpt
-
+  DISKPART> list disk
+  Disk #### Status Size Free Dyn Gpt
 -------- ------------- ------- ------- --- ---
-
 Disk 0 Online 465 GB 1024 KB *
-
 Disk 1 Online 14 GB 0 B
-
 Disk 2 Online 7695 MB 0 B
 
-Select boot disk
+  Select boot disk
 You need to "Select" a disk before continuing. If only one disk shows, type, select disk 0. If there is more than one disk, they will need to verify based on disk size. If it is not disk 0 they would replace 0 with the number of the drive. (In my sample above, it is hopefully clear that '0' is the boot drive and the other two are not.)
 
-DISKPART> select disk 0
-
+  DISKPART> select disk 0
 Disk 0 is now the selected disk.
-
 Verify Partitions
 Type, list par, to verify that there are 4 partitions, Recovery, System, Reserved, Primary.
 
-DISKPART> list par
-
+  DISKPART> list par
 Partition #### Type Size Offset
-
 ------------- ---------------- ------- -------
-
 Partition 1 Recovery 450 MB 1024 KB
-
 Partition 2 System 99 MB 451 MB
-
 Partition 3 Reserved 16 MB 550 MB
-
 Partition 4 Primary 464 GB 566 MB
-
 Partition 5 Recovery 847 MB 464 GB
-
 .
 
 Select volume to use
 Type, list vol, the volume number they want to use in the next step will have a FAT32 file system and should be 99MB with System under info.
 
-DISKPART> list vol
-
+  DISKPART> list vol
 Volume #### Ltr Label Fs Type Size Status Info
-
 ---------- --- ----------- ----- ---------- ------- --------- --------
-
 Volume 0 C NTFS Partition 464 GB Healthy Boot
-
 Volume 1 Recovery NTFS Partition 450 MB Healthy Hidden
-
 Volume 2 FAT32 Partition 99 MB Healthy System
-
 Volume 3 NTFS Partition 847 MB Healthy Hidden
-
 Volume 4 F FAT32 Removable 14 GB Healthy
-
 Volume 5 E IRON MAN FAT32 Removable 7695 MB Healthy
 
 In this example, this is Volume 2.
-
 Type, select vol 2, (number identified from previous step), i.e. select vol 2
 
-DISKPART> select vol 2
+  DISKPART> select vol 2
 
 Volume 2 is the selected volume.
-
 Type, assign letter=z and should see "Diskpart successfully assigned the drive letter".
 
-DISKPART> assign letter=z
-
+  DISKPART> assign letter=z
 DiskPart successfully assigned the drive letter or mount point.
 
 Type exit (Z: drive is now the System partition)
-
 Set up EFI boot partition using bcdedit (Boot Configuration Data editor)
 (c.f. https://neosmart.net/wiki/bcdedit/#Commands_and_parameters for more info on bcdedit)
 
-Type mkdir Z:\EFI\Microsoft\Boot
-Type xcopy /s C:\Windows\Boot\EFI*.* Z:\EFI\Microsoft\Boot
-Type z:
-Type cd EFI\Microsoft\Boot
-Type the following commands
-bcdedit /createstore BCD
-bcdedit /store BCD /create {bootmgr} /d "Windows Boot Manager"
-bcdedit /store BCD /create /d "My Windows 10" /application osloader (they can change My Windows 10 to anything they want)
+  Type mkdir Z:\EFI\Microsoft\Boot
+  Type xcopy /s C:\Windows\Boot\EFI*.* Z:\EFI\Microsoft\Boot
+  Type z:
+  Type cd EFI\Microsoft\Boot
+  Type the following commands
+  bcdedit /createstore BCD
+  bcdedit /store BCD /create {bootmgr} /d "Windows Boot Manager"
+  bcdedit /store BCD /create /d "My Windows 10" /application osloader (they can change My Windows 10 to anything they want)
 The last command will return a GUID, for example, {D91FE7C2-605F-4A2B-B035-80A7C30979BF}, they will need to use this guid in the next step
 
 Type the following commands
-bcdedit /store BCD /set {bootmgr} default {your_guid} (your_guid will be the guid mentioned in step 9)
-bcdedit /store BCD /set {bootmgr} path \EFI\Microsoft\Boot\bootmgfw.efi
-bcdedit /store BCD /set {bootmgr} displayorder {default}
-bcdedit /store BCD /set {default} device partition=c:
-bcdedit /store BCD /set {default} osdevice partition=c:
-bcdedit /store BCD /set {default} path \Windows\System32\winload.efi
-bcdedit /store BCD /set {default} systemroot \Windows
-exit
+  bcdedit /store BCD /set {bootmgr} default {your_guid} (your_guid will be the guid mentioned in step 9)
+  bcdedit /store BCD /set {bootmgr} path \EFI\Microsoft\Boot\bootmgfw.efi
+  bcdedit /store BCD /set {bootmgr} displayorder {default}
+  bcdedit /store BCD /set {default} device partition=c:
+  bcdedit /store BCD /set {default} osdevice partition=c:
+  bcdedit /store BCD /set {default} path \Windows\System32\winload.efi
+  bcdedit /store BCD /set {default} systemroot \Windows
+  exit
 Reboot the machine.
-Last Update: November 24, 2020</p>
+
+</p>
     </div>
     </div>
     
@@ -162,38 +132,28 @@ Last Update: November 24, 2020</p>
   <section>
     <div class="kb-entry">
       <h3>How to install Windows 11 with a local account (Builds 26120 and beyond)</h3>
-      <div class="editable-box" contenteditable="true">
-        <p>FROM https://www.tomshardware.com/how-to/install-windows-11-without-microsoft-account</p>
+          <p>FROM https://www.tomshardware.com/how-to/install-windows-11-without-microsoft-account</p>
           <p> 
 On new preview builds of Windows (and eventually the next release version), the OOBE/BYPASSNRO command has been erased and no longer works. Instead, there's a new command called start ms-chx:localonly that does something similar. Here's how you use it.
-
 1. Follow the Windows 11 install process until you get to the Sign in screen.
-
 Windows 11 signin screen
-
 (Image credit: Tom's Hardware)
 2. Hit Shift + F10. A command prompt appears.
-
 3. Enter start ms-cxh:localonly at the command prompt.
 
-start ms-cxh
+            start ms-cxh
 
 (Image credit: Tom's Hardware)
 A "Create a user for this PC" dialog window appears.
-
 4. Enter a local username and password. If you enter no password, you'll have no password.
 
-enter a local username
+            enter a local username
 
 (Image credit: Tom's Hardware)
 5. Complete the installation process and you'll be using the local account you created.
 
-How to Create a Windows 11 Install Disk that Allows Bypassing Microsoft Accounts 
-You can also create an install disk that has the "no Internet required" setting built into the setup process.
-
-who is going to use this device
 </p>
-      </div>
+   
     </div>
   
 </section>
