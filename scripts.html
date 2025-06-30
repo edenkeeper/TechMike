@@ -84,5 +84,71 @@ $i.FullName+ " -- " + "{0:N2}" -f ($subFolderItems.sum / 1GB) + "GB"
     </code>
     </pre>
   </section>
+
+  <section>
+    <h2>PowerShell Script to seperate text document on the timestamp and create seperate text files per day</h2>
+    <pre class="code-snippet">
+      <code>
         
+      # Prompt user for input file
+$inputFile = Read-Host "Enter the full path to the input text file"
+
+$outputFolder = Read-Host "Enter the full path to the output folder"
+New-Item -ItemType Directory -Force -Path $outputFolder | Out-Null
+
+# Read all lines
+$lines = Get-Content $inputFile
+
+#If the line begins (^) with the format [INT,INT/INT,INT/INT INT,INT,INT i.e. dd/mm/yyyy
+#read in day month year and then create outfile using year.month.day
+       
+foreach ($line in $lines) {
+if ($line -match '^\[(\d{2})/(\d{2})/(\d{4})') {
+            $day = $matches[1]
+            $month = $matches[2]
+            $year = $matches[3]
+            $outputfile= join-path $outputfolder "$Year.$month.$day.txt"
+            add-content -path $outputfile -value $line
+   }
+}        
+      </code>
+    </pre>
+  </section>
+
+ <section>
+    <h2>PowerShell Script to check first character is what you expect</h2>
+    <pre class="code-snippet">
+      <code>
+        
+# Prompt for input file
+$inputFile = Read-Host "Enter the full path to the input text file"
+
+# Check if file exists
+if (-not (Test-Path $inputFile)) {
+    Write-Host "File not found: $inputFile" -ForegroundColor Red
+    exit
+}
+
+# Read all lines
+$lines = Get-Content $inputFile
+
+# Regex pattern: starts with [dd/mm/yyyy]
+$pattern = '^\[(\d{2})/(\d{2})/(\d{4})'
+
+#output title showing what we are looking for
+Write-Host "`nLines that do NOT start with [dd/mm/yyyy]:`n" -ForegroundColor Cyan
+
+#output any lines that do not follow the pattern specfied
+        
+foreach ($line in $lines) {
+    if (-not ($line -match $pattern)) {
+        Write-Host $line
+    }
+}
+
+      </code>
+    </pre>
+  </section>
+  
+  
 </main>
