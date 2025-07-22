@@ -218,6 +218,73 @@ foreach ($line in $lines) {
       </code>
     </pre>
   </section>
-  
+
+    <section>
+    <h2>List Directories with their sizes</h2>
+    <pre class="code-snippet">
+      <code>
+     
+#Created Mike Hindle
+#Date 22/07/2025
+#Version 1.3 
+
+# Prompt for case details
+$CaseName = Read-Host "Enter the Case Name (e.g., MyCase)"
+$CaseCode = Read-Host "Enter the Case Code (e.g., CC123)"
+
+# Sanitize filename-friendly versions
+$SafeCaseName = $CaseName -replace '[^\w\-]', '_'
+$SafeCaseCode = $CaseCode -replace '[^\w\-]', '_'
+
+# Prompt for the starting directory
+$StartDir = Read-Host "Enter the path of the starting directory"
+if (-Not (Test-Path -Path $StartDir -PathType Container)) {
+    Write-Host "❌ The specified starting directory does not exist." -ForegroundColor Red
+    exit
+}
+
+# Prompt for output directory
+$OutputDir = Read-Host "Enter the path where the CSV should be saved"
+if (-Not (Test-Path -Path $OutputDir -PathType Container)) {
+    Write-Host "❌ The specified output directory does not exist." -ForegroundColor Red
+    exit
+}
+
+# Construct the output filename
+$FileName = "$SafeCaseCode`_$SafeCaseName`_DirectorySizes.csv"
+$OutputCsv = Join-Path -Path $OutputDir -ChildPath $FileName
+
+# Function to calculate directory size in bytes
+function Get-DirectorySize {
+    param (
+        [string]$Path
+    )
+    $size = (Get-ChildItem -Path $Path -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum
+    return $size
+}
+
+# Get all directories including the root
+$allDirs = @($StartDir) + (Get-ChildItem -Path $StartDir -Directory -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+
+# Build results
+$results = foreach ($dir in $allDirs) {
+    $sizeBytes = Get-DirectorySize -Path $dir
+    [PSCustomObject]@{
+        Path   = $dir
+        SizeMB = "{0:N2}" -f ($sizeBytes / 1MB)
+        SizeGB = "{0:N2}" -f ($sizeBytes / 1GB)
+    }
+}
+
+# Export to CSV
+$results | Export-Csv -Path $OutputCsv -NoTypeInformation -Encoding UTF8
+
+Write-Host "`n✅ Directory sizes saved to:`n$OutputCsv" -ForegroundColor Green
+
+
+        
+      </code>
+    </pre>
+  </section>
   
 </main>
