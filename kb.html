@@ -157,7 +157,33 @@ A "Create a user for this PC" dialog window appears.
    
     </div>   
     </div>
-  
+
+         <div class="kb-entry">
+      <h3>Drives Serial Number from command line</h3>
+      <div class="editable-box" contenteditable="true">
+ <p> 
+Assign it a drive letter 
+Then in PowerShell
+
+PS C:\Users\mike> Get-Partition -DriveLetter D | Get-Disk | Select-Object SerialNumber
+SerialNumber
+------------
+WXXXXXXXXXX
+
+Or if you don’t need to assign a drive letter you can use WMIC
+
+PS C:\Users\mike>  wmic diskdrive get model,serialNumber,size,mediaType
+MediaType                 Model                        SerialNumber          Size
+Fixed hard disk media     BC711 NVMe SK hynix 256GB    FFFF_FFFF_FFFF_FFFF.  256052966400
+External hard disk media  WD Elements 2621 USB Device  WX42A6xxxxxxxx        1000169372160
+External hard disk media  WD Elements 2621 USB Device  WXxxxxxxxxxx          1000169372160
+ </p>
+
+
+      </div>
+  </div>
+
+    
 </section>
 
 
