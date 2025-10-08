@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="scripts.css">
+
+<!-- Your Scripts Page content here -->
+<!-- Scripts Page -->
+<header>
+  <h1>Scripts Page</h1>
+</header>
+
+<main>
+  <section>
+    <h2>Display hostname, ipaddress, wifi, cpu, ram, storage </h2>
+    <pre class="code-snippet">
+      <code>
+        #This code creates a popup to display the required information,
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+# Gather system info
+$hostname = $env:COMPUTERNAME
+$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.InterfaceAlias -notlike "*Loopback*"} | Select-Object -First 1).IPAddress
+$cpu = (Get-CimInstance Win32_Processor).Name
+$storage = "{0:N2} GB Free / {1:N2} GB Total" -f (
+    (Get-PSDrive C).Free / 1GB,
+    (Get-PSDrive C).Used + (Get-PSDrive C).Free / 1GB
+)
+$serial = (Get-CimInstance Win32_BIOS).SerialNumber
+$ram = "{0:N2} GB" -f ((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
+
+# Detect active network adapter and connection type
+$netAdapters = Get-CimInstance Win32_NetworkAdapter | Where-Object {
+    $_.NetEnabled -eq $true -and $_.PhysicalAdapter -eq $true
+}
+
+$wifiAdapter = $netAdapters | Where-Object { $_.Name -match "Wi-Fi|Wireless" }
+$ethernetAdapter = $netAdapters | Where-Object { $_.Name -match "Ethernet|LAN" }
+
+if ($wifiAdapter) {
+    $connectionType = "Wi-Fi"
+    $ssid =  (get-NetConnectionProfile).name
+} elseif ($ethernetAdapter) {
+    $connectionType = "Ethernet / Wired"
+    $ssid = "Not applicable"
+} else {
+    $connectionType = "Unknown"
+    $ssid = "Unavailable"
+}
+
+# Create form
+$form = New-Object System.Windows.Forms.Form
+$form.WindowState = 'Maximized'
+$form.BackColor = 'Black'
+$form.FormBorderStyle = 'None'
+$form.TopMost = $true
+
+# Create label
+$label = New-Object System.Windows.Forms.Label
+$label.Text = "Hostname: $hostname`nIP: $ip`nConnection: $connectionType`nWi-Fi SSID: $ssid`nCPU: $cpu`nRAM: $ram`nStorage: $storage`nSerial: $serial"
+$label.ForeColor = 'White'
+$label.Font = New-Object System.Drawing.Font("Arial", 50, [System.Drawing.FontStyle]::Bold)
+$label.Size = New-Object System.Drawing.Size(1600, 900)
+$label.Location = New-Object System.Drawing.Point(100, 100)
+$label.AutoSize = $false
+$label.TextAlign = 'TopLeft'
+
+$form.Controls.Add($label)
+
+# Add keypress event to close on Esc
+$form.KeyPreview = $true
+$form.Add_KeyDown({
+    if ($_.KeyCode -eq 'Escape') {
+        $form.Close()
+    }
+})
+
+$form.ShowDialog()
+
+        
+      </code>
+    </pre>
+  </section>
+  
+  
+</main>
