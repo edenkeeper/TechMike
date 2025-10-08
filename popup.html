@@ -33,11 +33,12 @@ $freeGB = [math]::Round($drive.Free / 1GB, 2)
 $totalGB = [math]::Round(($drive.Used + $drive.Free) / 1GB, 2)
 $storage = "$freeGB GB Free / $totalGB GB Total"
 
-# Get Wi-Fi SSID and connection type
-$wifiInfo = netsh wlan show interfaces
-$ssidMatch = $wifiInfo | Select-String '^\s*SSID\s*:\s*(.+)$'
-$ssid = if ($ssidMatch) { $ssidMatch.Matches[0].Groups[1].Value.Trim() } else { "Not Connected" }
-$connectionType = if ($ssidMatch) { "Wi-Fi" } else { "Ethernet / Wired" }
+# Get network name and connection type
+$netProfile = Get-NetConnectionProfile | Where-Object { $_.IPv4Connectivity -ne 'None' } | Select-Object -First 1
+$networkName = if ($netProfile.Name) { $netProfile.Name } else { "Not Connected" }
+$connectionType = if ($netProfile.NetworkCategory -eq 'Public' -or $netProfile.NetworkCategory -eq 'Private') {
+    if ($netProfile.InterfaceAlias -match 'Wi-Fi') { "Wi-Fi" } else { "Ethernet / Wired" }
+} else { "Unknown" }
 
 # Timestamp
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -47,7 +48,7 @@ $auditText = @"
 Hostname: $hostname
 IP: $ip
 Connection: $connectionType
-Wi-Fi SSID: $ssid
+Network Name: $networkName
 CPU: $cpu
 RAM: $ram
 Storage: $storage
